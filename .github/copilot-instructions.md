@@ -67,29 +67,16 @@ Prefer solutions that are simple, maintainable, and easy to understand.
 ### Avoid Over-Architecture
 
 Do not create abstractions, interfaces, classes, design patterns, or
-layers simply because they are common in large projects.
+layers simply because they are common in large projects. The architecture
+should evolve with the project's real needs.
 
-The architecture should evolve with the project's real needs.
-
-### Prioritise Learning
-
-When several reasonable solutions exist, prioritise the one that helps
-the user understand the system better, provided it does not introduce a
-significant technical disadvantage.
-
+When several reasonable solutions exist, prefer the one that helps the
+user understand the system without significant technical disadvantages.
 Do not hide important decisions behind generated code.
 
-### Do Not Assume Knowledge
-
-When a task involves unfamiliar or potentially complex concepts:
-
-1. briefly explain the concept;
-2. explain why it is necessary;
-3. present the relevant alternatives;
-4. propose a solution;
-5. implement it afterwards.
-
-Long explanations are not necessary for trivial changes.
+When a task involves an unfamiliar or complex concept, briefly explain
+what it is, why it is needed, the relevant alternatives, and the proposed
+solution before implementing it. Keep explanations short for trivial work.
 
 ## 4. Working Method
 
@@ -98,8 +85,9 @@ Before making important changes:
 1. inspect the repository and existing code;
 2. identify the files that will be affected;
 3. briefly explain the proposed approach;
-4. identify relevant risks or decisions;
-5. implement afterwards.
+4. identify relevant tests, risks, and decisions;
+5. implement afterwards;
+6. run the relevant checks.
 
 Do not modify files unrelated to the task.
 
@@ -111,7 +99,7 @@ are necessary to complete that task correctly.
 If there is significant uncertainty about the requirements, ask before
 implementing.
 
-## 5. Code
+## 5. Code and Scope
 
 Prioritise:
 
@@ -123,10 +111,14 @@ Prioritise:
 - code that is easy to test;
 - idiomatic solutions for the language in use.
 
-Do not use unnecessary design patterns.
+Do not use unnecessary design patterns or duplicate logic when reuse is
+clearly beneficial, but do not create premature abstractions either.
 
-Do not duplicate logic when reuse is clearly beneficial, but do not
-create premature abstractions either.
+Work only on the requested task. Do not fix unrelated problems unless
+they block the task, and do not implement speculative features.
+
+Keep changes small and coherent. Do not mix new functionality with
+unrelated refactoring, formatting, or architectural changes.
 
 ## 6. Testing
 
@@ -141,7 +133,9 @@ When adding functionality with meaningful logic:
 
 Do not create artificial tests solely to increase coverage.
 
-Tests must verify real behaviour.
+Tests must verify real behaviour rather than artificially increasing
+coverage. Before implementing a task, identify the relevant verification
+steps, including edge cases where appropriate.
 
 ## 7. Football Data and Analysis
 
@@ -200,33 +194,7 @@ the user explicitly requests them.
 When functionality depends on a specific data source, document its
 limitations.
 
-## 10. Git and Changes
-
-Keep changes small and coherent.
-
-Do not mix the following in a single change:
-
-- new functionality;
-- unrelated refactoring;
-- formatting changes;
-- architectural changes.
-
-When appropriate, suggest small and descriptive commits.
-
-## 11. Fundamental Rule
-
-Do not optimise only to finish the task.
-
-Optimise for building a system that the user can understand, maintain,
-and extend.
-
-If a solution seems unnecessarily complex, point it out.
-
-If an important decision can be postponed, point it out.
-
-If there is a simpler way to learn the same concept, prefer it.
-
-## Language
+## 10. Language
 
 Use English for all software-related artefacts:
 
@@ -253,20 +221,20 @@ internationalisation infrastructure until it is actually needed.
 However, avoid architectural decisions that would make future
 internationalisation unnecessarily difficult.
 
-## Task Decomposition
+## 11. Planning and Learning
 
-At the beginning of each development phase, help the user decompose the
-phase into small, ordered implementation tasks.
+At the beginning of each development phase, help the user decompose it
+into small, ordered implementation tasks.
 
 Tasks should be independently understandable and preferably small
 enough to implement and review in a single development cycle.
 
 Do not implement an entire phase unless explicitly requested.
 
-Before implementing a task, identify relevant tests and verification
-steps.
+Prioritise learning while keeping momentum. Explain important concepts,
+trade-offs, assumptions, and limitations in terms the user can understand.
 
-## Engineering Practices
+## 12. Engineering Practices
 
 Introduce engineering practices progressively when they solve a real
 problem in the project.
@@ -275,7 +243,32 @@ Do not introduce CI/CD, Docker, complex testing infrastructure,
 databases, MCP servers, skills, or other tooling merely because they are
 considered standard in modern software projects.
 
-When a new practice becomes relevant, explain:
-1. what problem it solves;
-2. why the current approach is insufficient;
-3. what the simplest implementation would be.
+When a new practice becomes relevant, explain the problem it solves, why
+the current approach is insufficient, and the simplest implementation.
+
+Follow existing conventions, reuse dependencies where appropriate, and
+prefer readable, explicit code over clever code. Identify and explain the
+root cause before debugging. Treat the repository, tests, and project
+documentation as authoritative over old conversation assumptions.
+
+Keep documentation purposeful, including important architectural
+decisions and non-obvious requirements. Do not create documentation for
+its own sake.
+
+## 13. Git and Communication
+
+Do not commit, push, merge, or rewrite history unless explicitly
+requested. Keep the main branch stable; suggest small, descriptive
+commits or branch names when useful.
+
+Recommend a commit when a meaningful increment is complete, coherent,
+and independently verifiable. Before recommending one, inspect the
+working tree and confirm which files belong to that increment.
+
+Keep documentation, configuration, features, tests, and unrelated
+refactoring in separate commits when practical. Mention the relevant
+validation checks and suggest a concise commit message.
+
+Explain important decisions and trade-offs concisely. When an
+architectural or scope decision is uncertain, propose options instead of
+silently making a large irreversible change.
