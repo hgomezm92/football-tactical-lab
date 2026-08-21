@@ -261,6 +261,14 @@ Do not commit, push, merge, or rewrite history unless explicitly
 requested. Keep the main branch stable; suggest small, descriptive
 commits or branch names when useful.
 
+Recommend a commit when a meaningful increment is complete, coherent,
+and independently verifiable. Before recommending one, inspect the
+working tree and confirm which files belong to that increment.
+
+Keep documentation, configuration, features, tests, and unrelated
+refactoring in separate commits when practical. Mention the relevant
+validation checks and suggest a concise commit message.
+
 Explain important decisions and trade-offs concisely. When an
 architectural or scope decision is uncertain, propose options instead of
 silently making a large irreversible change.
