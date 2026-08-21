@@ -1,148 +1,217 @@
-# Project Roadmap
+# MVP Roadmap
 
-Football Tactical Lab will evolve from a small, understandable data
-exploration tool into a progressively more advanced football analysis
-laboratory. Each phase should produce a useful result before the next
+The MVP is delivered through four sequential phases. Each phase produces
+an independently useful result and reduces a specific risk before the next
 phase begins.
 
-## Phase 1: Understand the Data
+The roadmap stops after the first validated team metric and local app. More
+metrics, teams, players, competitions, statistical relationships, and
+counterfactual analysis require a later roadmap revision.
 
-**Objective:** Explore a small selection of StatsBomb Open Data and
-understand what it records.
+## Phase 1: Validate the Dataset
 
-**Learn:** JSON structures, nested data, descriptive analysis, and data
-quality checks.
+### Objective
 
-**Functionality:** Load competitions, matches, teams, players, and event
-types; produce basic descriptive summaries.
+Choose a small StatsBomb competition and season and understand whether its
+files contain the data required for the MVP.
 
-**Data needed:** StatsBomb Open Data competition, match, lineup, and
-event files.
+### Expected Outcome
 
-**Difficulty:** Low.
+A reproducible local data report describing the selected files, matches,
+teams, players, event types, available coordinates, and data-quality gaps.
 
-**Done when:** A reproducible local report can state how many matches,
-teams, players, events, and event types are present in the selected data.
+### Dependencies
 
-## Phase 2: Import and Store the Data
+- StatsBomb Open Data files.
+- A working local Python environment.
 
-**Objective:** Make the source data available in a consistent,
-queryable local form.
+### Major Tasks
 
-**Learn:** Data modelling, identifiers, relationships, import processes,
-and idempotency.
+- Confirm the selected competition and season.
+- Inspect competition, match, lineup, and event file structures.
+- Identify relevant identifiers, event attributes, and coordinate fields.
+- Record source files and available version or date information.
+- Produce basic counts and per-match summaries.
+- Identify whether recovery events and attacking-direction information are
+  available.
 
-**Functionality:** Import matches and events, retain source identifiers,
-avoid duplicate imports, and report malformed or incomplete files.
+### Tests or Verification
 
-**Data needed:** The StatsBomb files used in Phase 1.
+- Load representative files successfully.
+- Report a clear error for an unreadable or malformed file.
+- Verify counts and groupings with small hand-checked examples.
+- Confirm that missing fields are reported rather than treated as data.
+- Re-run the report with the same files and compare the output.
 
-**Difficulty:** Low to medium.
+### Decisions That May Be Required
 
-**Done when:** The basic information for an imported match can be
-reconstructed from the local stored data, and the import can be safely
-run again.
+- Which competition and season provide the best first case study?
+- Which files are included in the MVP dataset?
+- Which event records qualify as recoveries?
+- Can field direction be normalised reliably for this data?
 
-## Phase 3: Build Descriptive Metrics
+### Definition of Done
 
-**Objective:** Calculate transparent, reproducible football metrics.
+- The selected dataset is documented and stored locally.
+- The data report is reproducible.
+- Required fields and known gaps are recorded.
+- The dataset is either suitable for `recovery height` or the metric
+  definition is revised before implementation.
 
-**Learn:** Aggregations, metric definitions, edge cases, and focused
-automated testing.
+## Phase 2: Define and Calculate Recovery Height
 
-**Functionality:** Calculate passing, shooting, scoring, recovery, and
-loss-of-possession summaries by match, team, player, and period.
+### Objective
 
-**Data needed:** Stored events, match metadata, and score information.
+Turn the first tactical question into a transparent, tested descriptive
+metric.
 
-**Difficulty:** Medium.
+### Expected Outcome
 
-**Done when:** Every metric has a written definition, known examples,
-and tests covering its main cases and relevant edge cases.
+A documented calculation that returns recovery height per team and match,
+with the number of observations used and explicit unavailable-data cases.
 
-## Phase 4: Explore the Results Visually
+### Dependencies
 
-**Objective:** Make common questions answerable without changing code.
+- Phase 1 dataset report.
+- Confirmed event semantics and coordinate availability.
+- The metric definition in `docs/metrics/recovery-height.md`.
 
-**Learn:** Interactive visualisation, filtering, spatial data, and
-communicating analytical results.
+### Major Tasks
 
-**Functionality:** Provide match, team, and player filters; show tables,
-comparisons, event timelines, and basic pass or shot maps.
+- Finalise the qualifying recovery event definition.
+- Finalise coordinate scale and attacking-direction treatment.
+- Define exclusions and missing-data behaviour.
+- Calculate the match-level value and observation count.
+- Preserve source identifiers needed for traceability.
+- Write a short manual validation record for selected matches.
 
-**Data needed:** Metrics and event coordinates where available.
+### Tests or Verification
 
-**Difficulty:** Medium.
+- Test normal recoveries and expected values.
+- Test missing coordinates and empty input.
+- Test invalid or incomplete events.
+- Test both field orientations.
+- Test observation counts and unavailable results.
+- Compare selected outputs with manually calculated examples.
 
-**Done when:** A user can inspect a selected match and investigate a
-small set of predefined questions through the local interface.
+### Decisions That May Be Required
 
-## Phase 5: Define Tactical Metrics
+- Mean, median, or another summary statistic.
+- Minimum observation threshold for displaying a summary.
+- Whether the metric should be called `recovery height` for the selected
+  event definition.
 
-**Objective:** Study collective patterns using explicit and limited
-definitions.
+### Definition of Done
 
-**Learn:** Units of analysis, temporal aggregation, domain assumptions,
-and the limits of event data.
+- The metric has a written definition and limitations.
+- The calculation is independent of the user interface.
+- Tests cover its main cases and relevant edge cases.
+- A small manually reviewed sample produces plausible results without
+  being presented as proof of tactical validity.
 
-**Functionality:** Explore approximate progression, possession sequences,
-territorial patterns, recoveries followed by attacks, and behaviour
-under different score contexts.
+## Phase 3: Build the Local Team Analysis App
 
-**Data needed:** Event data with coordinates and any additional open
-data that can support the definitions.
+### Objective
 
-**Difficulty:** Medium to high.
+Make the validated analysis usable without changing source code for each
+selection.
 
-**Done when:** The metrics are documented, tested with examples, and
-their limitations are visible to anyone interpreting the results.
+### Expected Outcome
 
-## Phase 6: Apply Basic Statistics
+A local app where the user selects a competition, season, and team and sees
+the team's match-level recovery-height results.
 
-**Objective:** Study relationships between context, actions, and
-outcomes without treating associations as causal conclusions.
+### Dependencies
 
-**Learn:** Samples, variation, correlation, uncertainty, regression,
-confounding factors, and validation.
+- Phase 1 data loading and validation.
+- Phase 2 metric calculation.
+- A local Python environment with the chosen app and chart dependencies.
 
-**Functionality:** Compare groups of matches, include relevant context,
-quantify uncertainty, and evaluate models on data not used to fit them.
+### Major Tasks
 
-**Data needed:** A sufficiently broad collection of matches across
-competitions, seasons, teams, and contexts.
+- Add controls for competition, season, and team selection.
+- Show team matches, opponents, scores, and data-quality information.
+- Show recovery height and observation count per match.
+- Add one basic chart showing metric variation.
+- Display the metric definition and limitations in the team view.
+- Keep presentation separate from loading and calculation logic.
 
-**Difficulty:** High.
+### Tests or Verification
 
-**Done when:** Each analysis explains its assumptions, uncertainty,
-limitations, and the difference between association and causation.
+- Start the app locally with the documented command.
+- Select the documented case-study team and verify its matches appear.
+- Verify that unavailable data is visible and not displayed as zero.
+- Compare displayed values with Phase 2 outputs.
+- Check that the app handles an invalid or incomplete selection clearly.
 
-## Phase 7: Experiment with Counterfactual Scenarios
+### Decisions That May Be Required
 
-**Objective:** Explore hypothetical changes under explicit assumptions.
+- The simplest useful table and chart for the metric.
+- Whether the app should show only the case-study dataset or allow a small
+  set of documented selections.
+- How much source provenance should be visible in the initial interface.
 
-**Learn:** Simulation, uncertainty, causal reasoning, and model
-validation.
+### Definition of Done
 
-**Functionality:** Modify simplified tactical variables, generate
-hypothetical scenarios, and compare outcome distributions rather than
-claiming exact predictions.
+- The app runs locally.
+- A user can select the documented competition, season, and team.
+- The team view shows context, match-level results, observation counts,
+  one chart, and metric limitations.
+- The app does not contain metric formulas or data-loading logic in its
+  presentation code.
 
-**Data needed:** A large historical dataset and validated models that
-justify the chosen scenarios.
+## Phase 4: Reproduce and Review the MVP
 
-**Difficulty:** Very high.
+### Objective
 
-**Done when:** A scenario is a reproducible experiment with documented
-assumptions and uncertainty, rather than an unsupported claim about what
-would have happened.
+Confirm that the complete MVP is understandable, reproducible, and useful
+for learning from the selected case study.
 
-## Guiding Boundaries
+### Expected Outcome
 
-- StatsBomb Open Data and other free sources remain the initial data
-  boundary.
-- The project should stay local and simple until a concrete requirement
-  justifies additional infrastructure.
-- A complete football simulator is not a prerequisite for the earlier
-  phases.
-- Observed data, calculated metrics, inferred variables, and hypotheses
-  must remain clearly distinguished.
+A documented end-to-end workflow that another developer can run locally
+and use to inspect the first team metric.
+
+### Dependencies
+
+- Completed Phases 1 to 3.
+- Documented local setup and execution steps.
+
+### Major Tasks
+
+- Document how to obtain or place the StatsBomb files.
+- Document how to run the app and tests.
+- Review the metric explanation for clarity.
+- Perform a final manual review of a small match sample.
+- Record known limitations and unresolved questions.
+- Check that the requirements and implementation still agree.
+
+### Tests or Verification
+
+- Run the complete automated test suite.
+- Run the app from a clean local environment or documented setup.
+- Re-run the same analysis and compare results.
+- Verify the MVP acceptance criteria in `docs/requirements.md`.
+- Ask whether a learner can distinguish observed data from derived values.
+
+### Decisions That May Be Required
+
+- Whether the metric is sufficiently useful to justify a second metric.
+- Which limitation must be resolved before expanding the dataset.
+- Whether the next increment should add another team, another metric, or
+  better validation.
+
+### Definition of Done
+
+- The MVP acceptance criteria are satisfied.
+- The workflow is reproducible and documented.
+- The first metric's interpretation and limitations are explicit.
+- No future feature has been added without a concrete validated need.
+
+## Later Roadmap Revision
+
+After Phase 4, revise the roadmap using evidence from the MVP. Possible
+next increments include additional metrics, comparison across teams,
+player-level views, or broader competition coverage. Statistical
+relationships and counterfactual scenarios must remain separate decisions
+with their own data and validation requirements.
